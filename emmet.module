@@ -1,0 +1,25 @@
+<?php
+/**
+ * Created by PhpStorm.
+ * User: tschet
+ * Date: 9/3/15
+ * Time: 3:39 PM
+ */
+
+function emmet_page_build(&$page) {
+
+        $page['content']['emmet'] = array(
+            '#weight' => -1000,
+            '#markup' => t("<script>
+emmet.require('textarea').setup({
+        pretty_break: true, // enable formatted line breaks (when inserting
+                            // between opening and closing tag)
+        use_tab: true       // expand abbreviations by Tab key
+    });
+
+</script>
+<noscript><p>Emmet Development Tool not working, JS is disabled.</p></noscript>")
+        );
+
+
+}
