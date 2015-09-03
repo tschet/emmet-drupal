@@ -4,6 +4,6 @@ This is simple Drupal 7 module that embeds the [Emmet TextArea](https://github.c
   
  All credit for anything Emmet related goes to the people at [Emmet](http://emmet.io). I am in no way associated or affiliated with the Emmet Project.
 
-**This is definitely for development only.**
+**This is definitely for development usage only.**
 
 
