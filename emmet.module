@@ -23,3 +23,45 @@ emmet.require('textarea').setup({
 
 
 }
+/**
+ * Implements hook_libraries_info().
+ */
+function emmet_libraries_info() {
+    $libraries['emmet'] = array(
+        'name' => 'Emmet Plugin for textarea>',
+        'vendor url' => 'https://github.com/emmetio/textarea',
+        'download url' => 'https://github.com/emmetio/textarea/archive/master.zip',
+        'version arguments' => array(
+            'file' => 'emmet.js',
+            'pattern' => "@VERSION = '([0-9a-zA-Z\.-]+)'@",
+            'lines' => 65,
+        ),
+        'files' => array(
+            'js' => array('emmet.min.js'),
+        ),
+    );
+    return $libraries;
+}
+
+/**
+ * Implements hook_permission().
+ */
+function emmet_permission() {
+    return array(
+        'use emmet' => array(
+            'title' => t('Use Emmet'),
+            'description' => t('Use Emmet Toolkit in textareas.'),
+        ),
+    );
+}
+
+/**
+ * Implements hook_page_alter().
+ */
+/**
+ * Implements hook_form_alter().
+ */
+function emmet_form_alter(&$form, &$form_state, $form_id)
+{
+    $form['emmet']['#attached']['libraries_load'][] = array('emmet');
+}

@@ -1,10 +1,9 @@
 name = Emmet TextArea
 description = Emmet intigration with Text Area fields. Development Only!
 
+dependencies[] = libraries
+
 package = Development
 core = 7.x
 
 version = "7.x-1.0"
-
-;stylesheets[all][] = css/emmet.css
-scripts[] = js/emmet.js
