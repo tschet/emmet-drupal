@@ -6,27 +6,33 @@
  * Time: 3:39 PM
  */
 
-function emmet_page_build(&$page) {
-
+/**
+ * Implements hook_page_build().
+ */
+function emmet_page_build(&$page)
+{
+    if (user_access('use emmet')) {
         $page['content']['emmet'] = array(
             '#weight' => -1000,
             '#markup' => t("<script>
-emmet.require('textarea').setup({
-        pretty_break: true, // enable formatted line breaks (when inserting
-                            // between opening and closing tag)
-        use_tab: true       // expand abbreviations by Tab key
+            emmet.require('textarea').setup({
+            pretty_break: true, // enable formatted line breaks (when inserting
+                                // between opening and closing tag)
+            use_tab: true       // expand abbreviations by Tab key
     });
 
 </script>
 <noscript><p>Emmet Development Tool not working, JS is disabled.</p></noscript>")
         );
 
-
+    }
 }
+
 /**
  * Implements hook_libraries_info().
  */
-function emmet_libraries_info() {
+function emmet_libraries_info()
+{
     $libraries['emmet'] = array(
         'name' => 'Emmet Plugin for textarea>',
         'vendor url' => 'https://github.com/emmetio/textarea',
@@ -46,7 +52,8 @@ function emmet_libraries_info() {
 /**
  * Implements hook_permission().
  */
-function emmet_permission() {
+function emmet_permission()
+{
     return array(
         'use emmet' => array(
             'title' => t('Use Emmet'),
@@ -56,12 +63,11 @@ function emmet_permission() {
 }
 
 /**
- * Implements hook_page_alter().
- */
-/**
  * Implements hook_form_alter().
  */
 function emmet_form_alter(&$form, &$form_state, $form_id)
 {
-    $form['emmet']['#attached']['libraries_load'][] = array('emmet');
+    if (user_access('use emmet')) {
+        $form['emmet']['#attached']['libraries_load'][] = array('emmet');
+    }
 }
