@@ -1,16 +1,14 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: tschet
- * Date: 9/3/15
- * Time: 3:39 PM
+ * @file
+ * Module file for the Emmet module, which adds Emmet TextArea Library.
  */
 
 /**
  * Implements hook_page_build().
- * @param $page
  */
 function emmet_page_build(&$page) {
+
   if (user_access('use emmet')) {
     $page['content']['emmet'] = array(
       '#weight' => -1000,
@@ -22,7 +20,7 @@ function emmet_page_build(&$page) {
     });
 
 </script>
-<noscript><p>Emmet Development Tool not working, JS is disabled.</p></noscript>")
+<noscript><p>Emmet Development Tool not working, JS is disabled.</p></noscript>"),
     );
 
   }
@@ -32,6 +30,7 @@ function emmet_page_build(&$page) {
  * Implements hook_libraries_info().
  */
 function emmet_libraries_info() {
+
   $libraries['emmet'] = array(
     'name' => 'Emmet Plugin for textarea>',
     'vendor url' => 'https://github.com/emmetio/textarea',
@@ -52,6 +51,7 @@ function emmet_libraries_info() {
  * Implements hook_permission().
  */
 function emmet_permission() {
+
   return array(
     'use emmet' => array(
       'title' => t('Use Emmet'),
@@ -62,11 +62,9 @@ function emmet_permission() {
 
 /**
  * Implements hook_form_alter().
- * @param $form
- * @param $form_state
- * @param $form_id
  */
 function emmet_form_alter(&$form, &$form_state, $form_id) {
+
   if (user_access('use emmet')) {
     $form['emmet']['#attached']['libraries_load'][] = array('emmet');
   }
