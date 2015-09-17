@@ -10,12 +10,11 @@
  * Implements hook_page_build().
  * @param $page
  */
-function emmet_page_build(&$page)
-{
-    if (user_access('use emmet')) {
-        $page['content']['emmet'] = array(
-            '#weight' => -1000,
-            '#markup' => t("<script>
+function emmet_page_build(&$page) {
+  if (user_access('use emmet')) {
+    $page['content']['emmet'] = array(
+      '#weight' => -1000,
+      '#markup' => t("<script>
             emmet.require('textarea').setup({
             pretty_break: true, // enable formatted line breaks (when inserting
                                 // between opening and closing tag)
@@ -24,43 +23,41 @@ function emmet_page_build(&$page)
 
 </script>
 <noscript><p>Emmet Development Tool not working, JS is disabled.</p></noscript>")
-        );
+    );
 
-    }
+  }
 }
 
 /**
  * Implements hook_libraries_info().
  */
-function emmet_libraries_info()
-{
-    $libraries['emmet'] = array(
-        'name' => 'Emmet Plugin for textarea>',
-        'vendor url' => 'https://github.com/emmetio/textarea',
-        'download url' => 'https://github.com/emmetio/textarea/archive/master.zip',
-        'version arguments' => array(
-            'file' => 'emmet.js',
-            'pattern' => "@VERSION = '([0-9a-zA-Z\.-]+)'@",
-            'lines' => 65,
-        ),
-        'files' => array(
-            'js' => array('emmet.min.js'),
-        ),
-    );
-    return $libraries;
+function emmet_libraries_info() {
+  $libraries['emmet'] = array(
+    'name' => 'Emmet Plugin for textarea>',
+    'vendor url' => 'https://github.com/emmetio/textarea',
+    'download url' => 'https://github.com/emmetio/textarea/archive/master.zip',
+    'version arguments' => array(
+      'file' => 'emmet.js',
+      'pattern' => "@VERSION = '([0-9a-zA-Z\.-]+)'@",
+      'lines' => 65,
+    ),
+    'files' => array(
+      'js' => array('emmet.min.js'),
+    ),
+  );
+  return $libraries;
 }
 
 /**
  * Implements hook_permission().
  */
-function emmet_permission()
-{
-    return array(
-        'use emmet' => array(
-            'title' => t('Use Emmet'),
-            'description' => t('Use Emmet Toolkit in textareas.'),
-        ),
-    );
+function emmet_permission() {
+  return array(
+    'use emmet' => array(
+      'title' => t('Use Emmet'),
+      'description' => t('Use Emmet Toolkit in textareas.'),
+    ),
+  );
 }
 
 /**
@@ -69,9 +66,8 @@ function emmet_permission()
  * @param $form_state
  * @param $form_id
  */
-function emmet_form_alter(&$form, &$form_state, $form_id)
-{
-    if (user_access('use emmet')) {
-        $form['emmet']['#attached']['libraries_load'][] = array('emmet');
-    }
+function emmet_form_alter(&$form, &$form_state, $form_id) {
+  if (user_access('use emmet')) {
+    $form['emmet']['#attached']['libraries_load'][] = array('emmet');
+  }
 }
