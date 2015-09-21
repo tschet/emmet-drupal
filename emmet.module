@@ -5,28 +5,6 @@
  */
 
 /**
- * Implements hook_page_build().
- */
-function emmet_page_build(&$page) {
-
-  if (user_access('use emmet')) {
-    $page['content']['emmet'] = array(
-      '#weight' => -1000,
-      '#markup' => t("<script>
-            emmet.require('textarea').setup({
-            pretty_break: true, // enable formatted line breaks (when inserting
-                                // between opening and closing tag)
-            use_tab: true       // expand abbreviations by Tab key
-    });
-
-</script>
-<noscript><p>Emmet Development Tool not working, JS is disabled.</p></noscript>"),
-    );
-
-  }
-}
-
-/**
  * Implements hook_libraries_info().
  */
 function emmet_libraries_info() {
@@ -64,8 +42,35 @@ function emmet_permission() {
  * Implements hook_form_alter().
  */
 function emmet_form_alter(&$form, &$form_state, $form_id) {
-
   if (user_access('use emmet')) {
     $form['emmet']['#attached']['libraries_load'][] = array('emmet');
+
+  }
+}
+
+/**
+ * Implements hook_page_build().
+ */
+function emmet_page_build(&$page) {
+  if (user_access('use emmet')) {
+
+    $page['page_bottom']['emmet'] = array(
+      '#markup' => t("<script>
+// debugging on Chrome
+if (typeof _ != 'undefined') {
+
+    emmet.require('textarea').setup({
+    pretty_break: true, // enable formatted line breaks (when inserting
+                        // between opening and closing tag)
+    use_tab: true       // expand abbreviations by Tab key
+    });
+    }
+</script>
+<noscript>
+<p>Emmet Development Tool not enabled on this page.</p>
+</noscript>"),
+
+    );
+
   }
 }
