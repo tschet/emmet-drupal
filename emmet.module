@@ -10,7 +10,7 @@
 function emmet_libraries_info() {
 
   $libraries['emmet'] = array(
-    'name' => 'Emmet Plugin for textarea>',
+    'name' => 'Emmet Plugin for textarea fields',
     'vendor url' => 'https://github.com/emmetio/textarea',
     'download url' => 'https://github.com/emmetio/textarea/archive/master.zip',
     'version arguments' => array(
@@ -29,11 +29,14 @@ function emmet_libraries_info() {
  * Implements hook_permission().
  */
 function emmet_permission() {
-
   return array(
     'use emmet' => array(
       'title' => t('Use Emmet'),
       'description' => t('Use Emmet Toolkit in textareas.'),
+    ),
+    'administer emmet module' => array(
+      'title' => t('Administer Emmet Module'),
+      'description' => t('Change Emmet settings.'),
     ),
   );
 }
@@ -44,7 +47,6 @@ function emmet_permission() {
 function emmet_form_alter(&$form, &$form_state, $form_id) {
   if (user_access('use emmet')) {
     $form['emmet']['#attached']['libraries_load'][] = array('emmet');
-
   }
 }
 
@@ -58,7 +60,6 @@ function emmet_page_build(&$page) {
       '#markup' => t("<script>
 // debugging on Chrome
 if (typeof _ != 'undefined') {
-
     emmet.require('textarea').setup({
     pretty_break: true, // enable formatted line breaks (when inserting
                         // between opening and closing tag)
@@ -69,8 +70,41 @@ if (typeof _ != 'undefined') {
 <noscript>
 <p>Emmet Development Tool not enabled on this page.</p>
 </noscript>"),
-
     );
-
   }
+}
+
+/**
+ * Implements hook_menu().
+ */
+function emmet_menu() {
+ $items['admin/config/development/emmet'] = array(
+    'title' => 'Emmet Settings',
+    'description' => 'Emmet module configuration.',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('emmet_settings_callback'),
+    'access arguments' => array('administer emmet module'),
+    'type' => MENU_NORMAL_ITEM,
+  );
+
+  return $items;
+}
+
+/**
+ * Emmet settings callback.
+ */
+function emmet_settings_callback() {
+  $trigger = variable_get('emmet_trigger');
+  $form['emmet_trigger'] = array(
+    '#type' => 'radios',
+    '#title' => t('Emmet Trigger Key'),
+    '#default_value' => $trigger,
+    '#options' => array(
+      'tab' => t('Tab'),
+      'return' => t('Return')
+      ),
+    '#description' => t(
+      'Select the Emmet trigger key you want to use.'),
+  );
+  return system_settings_form($form);
 }

@@ -1,0 +1,68 @@
+<?php
+
+/**
+ * @file
+ * Install, update, and uninstall functions for the Emmet module.
+ */
+
+/**
+ * Implements hook_install().
+ */
+function emmet_install() {
+  variable_set('emmet_trigger', 'tab');
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function emmet_uninstall() {
+  variable_del('emmet_trigger');
+}
+
+/**
+ * Implements hook_requirements().
+ */
+function emmet_requirements($phase) {
+  if ($phase == 'install') {
+    $requirements = array();
+    // Ensure translations do not break at install time
+    $t = get_t();
+
+    $requirements['emmet'] = array(
+      'title' => $t('Emmet Library'),
+    );
+
+    $libraries = libraries_get_libraries();
+    if (!isset($libraries['emmet'])) {
+      $requirements['emmet']['severity'] = REQUIREMENT_ERROR;
+      $requirements['emmet']['description'] = $t('Please install the <a href="@url">Emmet library</a>.', array('@url' => 'https://github.com/emmetio/textarea'));
+    }
+
+    return $requirements;
+  }
+  if ($phase == 'runtime') {
+    $requirements = array();
+    // Ensure translations do not break at install time
+    $t = get_t();
+
+    $requirements['emmet'] = array(
+      'title' => $t('Emmet Library'),
+    );
+
+    $libraries = libraries_get_libraries();
+    if (isset($libraries['emmet'])) {
+      $library = libraries_load('emmet');
+      $library_version = ' (' . $library['version'] . ')';
+      $requirements['emmet']['value'] = $t('The Emmet Library is installed.' . $library_version);
+      $requirements['emmet']['severity'] = REQUIREMENT_OK;
+    }
+    else {
+      $requirements['emmet']['value'] = $t('Not Installed');
+      $requirements['emmet']['severity'] = REQUIREMENT_ERROR;
+      $requirements['emmet']['description'] = $t('Please install the <a href="@url">Emmet library</a>.', array('@url' => 'https://github.com/emmetio/textarea'));
+    }
+
+    return $requirements;
+  }
+}
+
