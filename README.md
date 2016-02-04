@@ -2,7 +2,6 @@
 
 CONTENTS OF THIS FILE
 ---
-
  * Introduction
  * Installation
  * Configuration
@@ -12,7 +11,6 @@ CONTENTS OF THIS FILE
 
 Introduction
 ---
-
 This is simple, single purpose, Drupal 7 module that embeds the 
 [Emmet TextArea](https://github.com/emmetio/textarea) js library into the 
 current Drupal theme for development purposes. When installed, this module 
@@ -30,7 +28,6 @@ the Emmet Project.
 
  * For a full description of the module, visit the sandbox page:
    https://www.drupal.org/sandbox/tschet/2563319
-
 
 Installation
 ---
