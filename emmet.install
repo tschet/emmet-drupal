@@ -9,14 +9,15 @@
  * Implements hook_install().
  */
 function emmet_install() {
-  variable_set('emmet_trigger', 'tab');
+  variable_set('emmet_profile', 'emmet-profile-html');
+  // variable_set('emmet_profile', 'html');.
 }
 
 /**
  * Implements hook_uninstall().
  */
 function emmet_uninstall() {
-  variable_del('emmet_trigger');
+  variable_del('emmet_profile');
 }
 
 /**
@@ -25,7 +26,7 @@ function emmet_uninstall() {
 function emmet_requirements($phase) {
   if ($phase == 'install') {
     $requirements = array();
-    // Ensure translations do not break at install time
+    // Ensure translations do not break at install time.
     $t = get_t();
 
     $requirements['emmet'] = array(
@@ -42,7 +43,7 @@ function emmet_requirements($phase) {
   }
   if ($phase == 'runtime') {
     $requirements = array();
-    // Ensure translations do not break at install time
+    // Ensure translations do not break at install time.
     $t = get_t();
 
     $requirements['emmet'] = array(
@@ -65,4 +66,3 @@ function emmet_requirements($phase) {
     return $requirements;
   }
 }
-

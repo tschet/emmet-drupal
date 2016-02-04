@@ -5,3 +5,5 @@ dependencies[] = libraries
 
 package = Development
 core = 7.x
+
+configure = admin/config/development/emmet

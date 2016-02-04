@@ -35,8 +35,8 @@ function emmet_permission() {
       'description' => t('Use Emmet Toolkit in textareas.'),
     ),
     'administer emmet module' => array(
-      'title' => t('Administer Emmet Module'),
-      'description' => t('Change Emmet settings.'),
+      'title' => t('Administer Emmet TextArea Module'),
+      'description' => t('Change Emmet TextArea settings.'),
     ),
   );
 }
@@ -47,40 +47,25 @@ function emmet_permission() {
 function emmet_form_alter(&$form, &$form_state, $form_id) {
   if (user_access('use emmet')) {
     $form['emmet']['#attached']['libraries_load'][] = array('emmet');
+    /* $form['emmet']['#attached']['js'] = array(
+    drupal_get_path('module', 'emmet') . '/js/emmet.js',
+    );*/
   }
-}
-
-/**
- * Implements hook_page_build().
- */
-function emmet_page_build(&$page) {
-  if (user_access('use emmet')) {
-
-    $page['page_bottom']['emmet'] = array(
-      '#markup' => t("<script>
-// debugging on Chrome
-if (typeof _ != 'undefined') {
-    emmet.require('textarea').setup({
-    pretty_break: true, // enable formatted line breaks (when inserting
-                        // between opening and closing tag)
-    use_tab: true       // expand abbreviations by Tab key
-    });
-    }
-</script>
-<noscript>
-<p>Emmet Development Tool not enabled on this page.</p>
-</noscript>"),
-    );
-  }
+  $emmet_profile = variable_get('emmet_profile');
+  $settings = array(
+    'profile' => $emmet_profile . ' emmet-use_tab-yes emmet-pretty_break-no',
+  );
+  drupal_add_js(array('emmet' => $settings), 'setting');
+  drupal_add_js(drupal_get_path('module', 'emmet') . '/js/emmet.js');
 }
 
 /**
  * Implements hook_menu().
  */
 function emmet_menu() {
- $items['admin/config/development/emmet'] = array(
-    'title' => 'Emmet Settings',
-    'description' => 'Emmet module configuration.',
+  $items['admin/config/development/emmet'] = array(
+    'title' => 'Emmet TextArea Settings',
+    'description' => 'Emmet TextArea module configuration.',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('emmet_settings_callback'),
     'access arguments' => array('administer emmet module'),
@@ -94,17 +79,31 @@ function emmet_menu() {
  * Emmet settings callback.
  */
 function emmet_settings_callback() {
-  $trigger = variable_get('emmet_trigger');
-  $form['emmet_trigger'] = array(
+  $profile = variable_get('emmet_profile');
+  $form['emmet_profile'] = array(
     '#type' => 'radios',
-    '#title' => t('Emmet Trigger Key'),
-    '#default_value' => $trigger,
+    '#title' => t('Emmet TextArea Output Profile'),
+    '#default_value' => $profile,
     '#options' => array(
-      'tab' => t('Tab'),
-      'return' => t('Return')
-      ),
+      'emmet-profile-html' => t('HTML'),
+      'emmet-profile-xhtml' => t('XHTML'),
+      'emmet-profile-xml' => t('XML'),
+      'emmet-profile-line' => t('Line'),
+    ),
     '#description' => t(
-      'Select the Emmet trigger key you want to use.'),
+      'Select the output profile. For example using the shortcut "br": HTML
+      would output &lt;br&gt;; XHTML would output &lt;br /&gt;, XML would
+      output &lt;br/&gt;. Line uses the HTML output without line breaks.'),
   );
   return system_settings_form($form);
+}
+
+/**
+ * Implements hook_help().
+ */
+function emmet_help($path, $arg) {
+  switch ($path) {
+    case 'admin/help#emmet':
+      return '<p>' . t('The Emmet TextArea module allows for the use of the <a href="@url">Emmet Toolkit</a> within text area fields. This toolkit expands shortcuts like ul&gt;li*5 into HTML. This example would expand into an unordered list with five list items when the trigger key is pressed. This module uses the Tab key as the trigger.', array('@url' => url('http://emmet.io/'))) . '</p>';
+  }
 }
